@@ -1,7 +1,7 @@
 /*
  *  OpenCV ver2以降を用いたユーティリティ
  *    coded by shimi
- *    ver. 20210118
+ *    ver. 20210805
  */
 #define _CRT_SECURE_NO_WARNINGS	
 #include <opencv2\opencv.hpp>
@@ -67,6 +67,12 @@ MatType(cv::Mat &mat,
 		case CV_8U:
 			sprintf(type,"CV_8U");
 			break;
+		case CV_8UC2:
+			sprintf(type,"CV_8UC3");
+			break;
+		case CV_8UC3:
+			sprintf(type,"CV_8UC3");
+			break;
 		case CV_8S:
 			sprintf(type,"CV_8S");
 			break;
@@ -82,8 +88,20 @@ MatType(cv::Mat &mat,
 		case CV_32F:
 			sprintf(type,"CV_32F");
 			break;
+		case CV_32FC2:
+			sprintf(type,"CV_32FC2");
+			break;
+		case CV_32FC3:
+			sprintf(type,"CV_32FC3");
+			break;
 		case CV_64F:
 			sprintf(type,"CV_64F");
+			break;
+		case CV_64FC2:
+			sprintf(type,"CV_64FC2");
+			break;
+		case CV_64FC3:
+			sprintf(type,"CV_64FC3");
 			break;
 		default:
 			printf("type error\n");
