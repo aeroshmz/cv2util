@@ -2,6 +2,12 @@
 
 INC="D:\UserLocal\Tools\OpenCV\include"
 
+CV_VER=452
+
+CV_LIB_PATH=/LIBPATH:"D:\UserLocal\Tools\OpenCV\lib"
+
+
+
 
 # user32.lib
 LIB_P_OPT1=/LIBPATH:"C:\Program Files (x86)\Windows Kits\10\Lib\10.0.18362.0\um\x64"
@@ -12,11 +18,18 @@ LIB_P_OPT2=/LIBPATH:"C:\Program Files (x86)\Microsoft Visual Studio\2019\BuildTo
 LIB_P_OPT3=/LIBPATH:"C:\Program Files (x86)\Windows Kits\10\Lib\10.0.18362.0\ucrt\x64"
 
 
-LPATH_FLAGS=$(LIB_P_OPT1) $(LIB_P_OPT2) $(LIB_P_OPT3)
+LPATH_FLAGS=$(LIB_P_OPT1) $(LIB_P_OPT2) $(LIB_P_OPT3) $(CV_LIB_PATH)
+
+
+CV_LIBS=opencv_core$(CV_VER).lib\
+		opencv_imgcodecs$(CV_VER).lib\
+		opencv_imgproc$(CV_VER).lib\
+		opencv_highgui$(CV_VER).lib
+
 
 
 all: cv2util.obj
-	cl.exe /EHsc /O2 sample.cpp cv2util.obj /I$(INC)
+	cl.exe /EHsc /O2 /I$(INC) sample.cpp cv2util.obj /link $(LPATH_FLAGS) $(CV_LIBS)
 
 
 cv2util.obj: cv2util.cpp cv2util.h

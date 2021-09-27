@@ -140,4 +140,33 @@ uchar
 			 int v,
 			 int u );
 
+//CV_16UデータをCV_8UC3で保持するためのエンコーダー
+//CV_16U-->CV_8UC3(BGR)
+void
+Encode16UTo8UC3(
+	unsigned short val_16u, 
+	unsigned char *b, unsigned char *g, unsigned char *r);
+
+//CV_8UC3で保持したCV_16Uデータを戻すためのデーコーダー
+//CV_8UC3(BGR)-->CV_16U
+unsigned short
+Decode16UTo8UC3(
+	unsigned char b, 
+	unsigned char g, 
+	unsigned char r);
+
+//CV_16UデータをCV_8UC3で保持するためのエンコーダー
+//cv::Mat CV_16U-->CV_8UC3(BGR)
+void
+Encode16UTo8UC3(
+	cv::Mat &mat16u,
+	cv::Mat &mat8uc3);
+
+//CV_8UC3で保持したCV_16Uデータを戻すためのデーコーダー
+//cv::Mat CV_8UC3(BGR)-->CV_16U
+void
+Decode8UC3To16U(
+	cv::Mat &mat8uc3,
+	cv::Mat &mat16u);
+
 

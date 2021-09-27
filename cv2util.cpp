@@ -1,47 +1,15 @@
 /*
  *  OpenCV ver2以降を用いたユーティリティ
  *    coded by shimi
- *    ver. 20210805
+ *    ver. 20210927
  */
 #define _CRT_SECURE_NO_WARNINGS	
 #include <opencv2\opencv.hpp>
 #include <opencv2\highgui.hpp>
 #include <iostream>
+#include <ppl.h>
 #include "cv2util.h"
 
-
-/*******************
- * Mat を作成する
- * type = CV_8U or
- *        CV_16S or
- *        CV_32F or
- *        CV_64F
- *   OpenCV 2.x 
- *******************/
-cv::Mat
-CreateMat( int row, int col, int type )
-{
-	cv::Mat data;
-	switch( type ){
-		case CV_8U:
-			data=cv::Mat_<char>( row, col );
-			break;
-		case CV_16S:
-			data=cv::Mat_<int>( row, col );
-			break;
-		case CV_32F:
-			data=cv::Mat_<float>( row, col );
-			break;
-		case CV_64F:
-			data=cv::Mat_<double>( row, col );
-			break;
-		default:
-			data=cv::Mat_<double>( row, col );
-			break;
-	}
-
-	return data;
-}
 
 /*************************
  * Mat のtypeを文字列にする
@@ -452,4 +420,102 @@ uchar
 	cv::Vec3b *bgr= img.ptr<cv::Vec3b>(v)+u;
 
 	return (uchar *)bgr;
+}
+
+//CV_16UデータをCV_8UC3で保持するためのエンコーダー
+//CV_16U-->CV_8UC3(BGR)
+void
+Encode16UTo8UC3( 
+	unsigned short val_16u, 
+	unsigned char *b, unsigned char *g, unsigned char *r)
+{
+	*g=val_16u>>8;
+	*r=val_16u&(0x00FF);
+}
+
+//CV_8UC3で保持したCV_16Uデータを戻すためのデーコーダー
+//CV_8UC3(BGR)-->CV_16U
+unsigned short
+Decode16UTo8UC3(  unsigned char b, unsigned char g, unsigned char r)
+{
+	unsigned short val_16u = ( g<<8 ) |  r ;
+	return val_16u;
+}
+
+//CV_16UデータをCV_8UC3で保持するためのエンコーダー
+//cv::Mat CV_16U-->CV_8UC3(BGR)
+void
+Encode16UTo8UC3(
+	cv::Mat &mat16u,
+	cv::Mat &mat8uc3)
+{
+	ushort val_16u;
+	uchar val_b=0, val_r=0, val_g=0;
+	
+
+	// 並列化NG
+	//printf("mat16u.rows=%d\n", mat16u.rows );
+	/*
+	Concurrency::parallel_for( 0, mat16u.rows, [&]( int v ){
+		for( int u = 0; u < mat16u.cols; u++ ){
+			cv::Vec3b *pix = mat8uc3.ptr<cv::Vec3b>(v);
+			//unsigned short *pshort=mat16u.ptr<unsigned short>(v);
+			val_16u=mat16u.ptr<unsigned short>(v)[u];
+			val_g=(uchar)(val_16u>>8);
+			val_r=(uchar)(val_16u&0xFF);
+			pix[u]=cv::Vec3b(val_b, val_g, val_r );
+
+			//printf(" %d %d  %d(%x)--> %x %x %x\n", u, v, val_16u, val_16u,
+			//	pix[u][0], pix[u][1], pix[u][2] );
+				//mat8uc3.ptr<unsigned char>(0)[colorIndex  ],
+				//mat8uc3.ptr<unsigned char>(0)[colorIndex+1],
+				//mat8uc3.ptr<unsigned char>(0)[colorIndex+2] );
+		}
+    } );
+    */
+
+
+    // 以下並列化しないバージョン  動作OK
+    for( int v = 0; v < mat16u.rows; v++ ){
+		cv::Vec3b *pix = mat8uc3.ptr<cv::Vec3b>(v);
+		ushort *us16 = mat16u.ptr<unsigned short>(v);
+		for( int u = 0; u < mat16u.cols; u++ ){
+			val_16u= us16[u];
+			val_g=val_16u>>8;
+			val_r=val_16u&0xFF;
+			
+			//pix[u]=cv::Vec3b(val_b, val_g, val_r );  遅
+			pix[u][0]=0;
+			pix[u][1]=val_g;
+			pix[u][2]=val_r;
+		}
+	}
+
+}
+
+
+//CV_8UC3で保持したCV_16Uデータを戻すためのデーコーダー
+//cv::Mat CV_8UC3(BGR)-->CV_16U
+void
+Decode8UC3To16U(
+	cv::Mat &mat8uc3,
+	cv::Mat &mat16u)
+{
+	ushort val_16u;
+	uchar val_r, val_g;
+	
+    
+    for( int v = 0; v < mat16u.rows; v++ ){
+        cv::Vec3b *pix = mat8uc3.ptr<cv::Vec3b>(v);
+		for( int u = 0; u < mat16u.cols; u++ ){
+			cv::Vec3b bgr=pix[u];
+			val_g=bgr[1];
+			val_r=bgr[2];
+
+            val_16u = ( val_g<<8 ) |  val_r ;
+            mat16u.ptr<unsigned short>(v)[u]=val_16u;
+		}
+	}
+
+
 }
