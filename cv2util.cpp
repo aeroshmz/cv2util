@@ -41,6 +41,9 @@ MatType(cv::Mat &mat,
 		case CV_8UC3:
 			sprintf(type,"CV_8UC3");
 			break;
+		case CV_8UC4:
+			sprintf(type,"CV_8UC4");
+			break;
 		case CV_8S:
 			sprintf(type,"CV_8S");
 			break;
