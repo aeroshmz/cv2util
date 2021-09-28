@@ -1,8 +1,15 @@
 /*
  *  OpenCV ver2以降を用いたユーティリティ
  *    coded by shimi
- *    ver. 20210118
+ *    ver. 20210928
  */
+ 
+
+
+//cv::Matにポインタでアクセスするためのマクロ
+#define MAT( cvmat, type, v, u )\
+		cvmat.ptr<type>(v)[u]
+
 union _data_pointer{
 	unsigned char *p8u;
 	char *p8s;

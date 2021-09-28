@@ -1,7 +1,7 @@
 /*
  *  OpenCV ver2以降を用いたユーティリティ
  *    coded by shimi
- *    ver. 20210927
+ *    ver. 20210928
  */
 #define _CRT_SECURE_NO_WARNINGS	
 #include <opencv2\opencv.hpp>
