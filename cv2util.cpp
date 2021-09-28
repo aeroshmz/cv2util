@@ -382,8 +382,10 @@ ExtractColorPlane(cv::Mat &src,  //元画像(カラー)
 	dist = planes[plane].clone();
 
 	return 1;
+}
 
-}int
+//カラー画像からの抽出
+int
 ExtractColorPlane(cv::Mat &src,  //元画像(カラー) 
 	cv::Mat &dist, //ある画像面を抽出した結果
 	cv::Mat &mask, //マスク画像
@@ -409,6 +411,7 @@ ExtractColorPlane(cv::Mat &src,  //元画像(カラー)
 		break;
 	}
 	planes[plane].copyTo(dist,mask!=0);
+	
 	return 1;
 
 }
