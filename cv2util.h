@@ -1,7 +1,7 @@
 /*
  *  OpenCV ver2以降を用いたユーティリティ
  *    coded by shimi
- *    ver. 20210928
+ *    ver. 20211110
  */
  
 
@@ -9,6 +9,8 @@
 //cv::Matにポインタでアクセスするためのマクロ
 #define MAT( cvmat, type, v, u )\
 		cvmat.ptr<type>(v)[u]
+
+
 
 union _data_pointer{
 	unsigned char *p8u;
@@ -168,6 +170,13 @@ void
 Encode16UTo8UC3(
 	cv::Mat &mat16u,
 	cv::Mat &mat8uc3);
+//CV_8U, CV_16UデータをCV_8UC3で保持するためのエンコーダー
+//cv::Mat CV_8U , CV_16U-->CV_8UC3(BGR)
+void
+Encode16UTo8UC3(
+	cv::Mat &mat16u,
+	cv::Mat &mat8u,
+	cv::Mat &mat8uc3);
 
 //CV_8UC3で保持したCV_16Uデータを戻すためのデーコーダー
 //cv::Mat CV_8UC3(BGR)-->CV_16U
@@ -177,3 +186,10 @@ Decode8UC3To16U(
 	cv::Mat &mat16u);
 
 
+//CV_8UC3で保持したCV_8U+CV_16Uデータを戻すためのデーコーダー
+//cv::Mat CV_8UC3(BGR)-->CV_16U
+void
+Decode8UC3To16U(
+	cv::Mat &mat8uc3,
+	cv::Mat &mat16u,
+	cv::Mat &mat8u);

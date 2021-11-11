@@ -1,7 +1,7 @@
 /*
  *  OpenCV ver2以降を用いたユーティリティ
  *    coded by shimi
- *    ver. 20210928
+ *    ver. 20211110
  */
 #define _CRT_SECURE_NO_WARNINGS	
 #include <opencv2\opencv.hpp>
@@ -500,6 +500,36 @@ Encode16UTo8UC3(
 }
 
 
+//CV_8U, CV_16UデータをCV_8UC3で保持するためのエンコーダー
+//cv::Mat CV_8U , CV_16U-->CV_8UC3(BGR)
+void
+Encode16UTo8UC3(
+	cv::Mat &mat16u,
+	cv::Mat &mat8u,
+	cv::Mat &mat8uc3)
+{
+	ushort val_16u;
+	uchar val_b=0, val_r=0, val_g=0;
+	
+    // 以下並列化しないバージョン  動作OK
+    for( int v = 0; v < mat16u.rows; v++ ){
+		cv::Vec3b *pix = mat8uc3.ptr<cv::Vec3b>(v);
+		ushort *us16 = mat16u.ptr<unsigned short>(v);
+		uchar  *uc8  = mat8u.ptr< unsigned char >(v);
+		for( int u = 0; u < mat16u.cols; u++ ){
+			val_16u= us16[u];
+			val_g=val_16u>>8;
+			val_r=val_16u&0xFF;
+			//pix[u]=cv::Vec3b(val_b, val_g, val_r );  遅
+			pix[u][0]=uc8[u];
+			pix[u][1]=val_g;
+			pix[u][2]=val_r;
+		}
+	}
+
+}
+
+
 //CV_8UC3で保持したCV_16Uデータを戻すためのデーコーダー
 //cv::Mat CV_8UC3(BGR)-->CV_16U
 void
@@ -520,6 +550,35 @@ Decode8UC3To16U(
 
             val_16u = ( val_g<<8 ) |  val_r ;
             mat16u.ptr<unsigned short>(v)[u]=val_16u;
+		}
+	}
+
+
+}
+
+//CV_8UC3で保持したCV_8U+CV_16Uデータを戻すためのデーコーダー
+//cv::Mat CV_8UC3(BGR)-->CV_16U
+void
+Decode8UC3To16U(
+	cv::Mat &mat8uc3,
+	cv::Mat &mat16u,
+	cv::Mat &mat8u)
+{
+	ushort val_16u;
+	uchar val_b, val_r, val_g;
+	
+    
+    for( int v = 0; v < mat16u.rows; v++ ){
+        cv::Vec3b *pix = mat8uc3.ptr<cv::Vec3b>(v);
+		for( int u = 0; u < mat16u.cols; u++ ){
+			cv::Vec3b bgr=pix[u];
+			val_b=bgr[0];
+			val_g=bgr[1];
+			val_r=bgr[2];
+
+            val_16u = ( val_g<<8 ) |  val_r ;
+            mat16u.ptr<unsigned short>(v)[u]=val_16u;
+            mat8u.ptr<unsigned char>(v)[u]=val_b;
 		}
 	}
 
