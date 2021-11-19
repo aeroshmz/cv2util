@@ -1,7 +1,7 @@
 /*
  *  OpenCV ver2以降を用いたユーティリティ
  *    coded by shimi
- *    ver. 20211110
+ *    ver. 20211119
  */
 #define _CRT_SECURE_NO_WARNINGS	
 #include <opencv2\opencv.hpp>
@@ -14,10 +14,15 @@
 /*************************
  * Mat のtypeを文字列にする
  * type = CV_8U or
+ *        CV_16U or
  *        CV_16S or
+ *        CV_32S or
  *        CV_32F or
- *        CV_64F
- *   OpenCV 2.x 
+ *        CV_32FC2 or
+ *        CV_32FC3 or
+ *        CV_64F or
+ *        CV_64FC2 or
+ *        CV_64FC3
  *************************/
 int
 MatType(cv::Mat &mat,
@@ -84,10 +89,15 @@ MatType(cv::Mat &mat,
 /**********************
  * Mat のtypeを表示する
  * type = CV_8U or
+ *        CV_16U or
  *        CV_16S or
+ *        CV_32S or
  *        CV_32F or
- *        CV_64F
- *   OpenCV 2.x 
+ *        CV_32FC2 or
+ *        CV_32FC3 or
+ *        CV_64F or
+ *        CV_64FC2 or
+ *        CV_64FC3
  **********************/
 int
 PrintMatType(cv::Mat &mat)
@@ -102,7 +112,6 @@ PrintMatType(cv::Mat &mat)
 
 /*******************
  *  行列を表示する
- *    OpenCV 2.X
  *******************/
 int
 PrintMat( cv::Mat &mat , 
@@ -166,7 +175,6 @@ MatIs( cv::Mat &mat,
 
 /*****************
  * 変数を読み込む
- *  OpenCV 2.X
  *****************/
 int
 LoadParam(char *filename, char *tag, double *data)
@@ -190,7 +198,6 @@ LoadParam(char *filename, char *tag, double *data)
 }
 /*****************
  * RECTを読み込む
- * OpenCV 2.X
  *****************/
 int
 LoadRect(char *filename, cv::Rect &roi)
@@ -213,7 +220,6 @@ LoadRect(char *filename, cv::Rect &roi)
 
 /*****************
  * 行列を読み込む
- *  OpenCV 2.X
  *****************/
 int
 LoadMatrix(	char *filename ,//ファイル名
