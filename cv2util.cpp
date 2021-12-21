@@ -269,6 +269,43 @@ LoadMatrix(	char *filename ,//ファイル名
 	return matdata;
 }
 
+cv::Mat 
+LoadMatrix(	char *filename ,//ファイル名
+			char *tag,		//読み込む行列のタグ
+			int  type)		//CV_32F, CV_64F
+{
+	cv::Mat tmp;
+	cv::Mat matdata;
+	cv::FileStorage cvfs(filename, cv::FileStorage::READ);
+    if (!cvfs.isOpened()){
+		printf("File can not be opened in cv::LoadMatrix().(%s)\n",filename);
+        return tmp;
+    }
+	
+	cvfs[tag]>>tmp;
+
+	if (tmp.rows == 0 || tmp.cols == 0) {
+		printf("Tag \"%s\" is not found in %s.\n",tag, filename);
+		return tmp;
+	}
+
+	switch( type ){
+	case CV_32F:
+		tmp.convertTo(matdata, CV_32F, 1.0 );
+		break;
+	case CV_64F:
+		tmp.convertTo(matdata, CV_64F, 1.0 );
+		break;
+	default:
+		tmp.convertTo(matdata, CV_32F, 1.0 );
+	}
+	
+	
+	return matdata;
+}
+
+
+
 /*
  *  ある点mが画像の範囲内かどうか判定
  *   0<=x<w and 0<=y<h --> return 1

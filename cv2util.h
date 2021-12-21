@@ -94,6 +94,12 @@ cv::Mat
 LoadMatrix(	char *filename ,//ファイル名
 			char *tag);		//読み込む行列のタグ
 
+cv::Mat 
+LoadMatrix(	char *filename ,//ファイル名
+			char *tag,		//読み込む行列のタグ
+			int  type);		//CV_32F, CV_64F
+
+
 /*
  *  ある点mが画像の範囲内かどうか判定
  *   0<=x<w and 0<=y<h --> return 1
